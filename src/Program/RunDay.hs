@@ -3,7 +3,9 @@
 module Program.RunDay (runDay, Day, Verbosity (Quiet, Timings, Verbose)) where
 
 import Control.Exception (SomeException, catch)
+import Control.Monad (when)
 import Control.Monad.Except
+import Control.Monad.IO.Class (liftIO)
 import Data.Attoparsec.Text
 import Data.Functor
 import Data.Text (pack)

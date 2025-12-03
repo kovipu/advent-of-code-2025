@@ -12,8 +12,9 @@ import qualified Data.Vector as Vec
 import qualified Util.Util as U
 
 import qualified Program.RunDay as R (runDay, Day)
-import Data.Attoparsec.Text
+import Data.Attoparsec.Text (Parser, many1, digit, sepBy, endOfLine)
 import Data.Void
+import Debug.Trace
 {- ORMOLU_ENABLE -}
 
 runDay :: R.Day
@@ -41,8 +42,19 @@ genPairs (x:xs) = pairs ++ genPairs xs
 partB :: Input -> Int
 partB input = foldl (+) 0 largest
   where
-    largest = map (read . last . sort . genDozens) input
+    largest = map (read . findBiggest) input
 
---  generate all possible chunks of 12
-genDozens :: [Char] -> [[Char]]
-genDozens xs = filter (\x -> length x == 12) $ subsequences xs
+-- find biggest chunk
+findBiggest xs = foldl fn (take 12 xs) (drop 12 xs)
+
+fn acc next = if b > acc then b else acc
+  where
+    b = deleteFirstSmaller acc ++ [next]
+
+-- delete the first character that is smaller than its next one
+deleteFirstSmaller :: Ord a => [a] -> [a]
+deleteFirstSmaller []       = []
+deleteFirstSmaller [x]      = [] -- fall back to deleting the last one
+deleteFirstSmaller (x:y:xs)
+  | x < y     = y : xs
+  | otherwise = x : deleteFirstSmaller (y:xs)

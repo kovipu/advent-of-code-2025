@@ -20,20 +20,29 @@ runDay :: R.Day
 runDay = R.runDay inputParser partA partB
 
 ------------ PARSER ------------
+type Input = [[Char]]
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
-
------------- TYPES ------------
-type Input = Void
-
-type OutputA = Void
-
-type OutputB = Void
+inputParser = many1 digit `sepBy` endOfLine
 
 ------------ PART A ------------
-partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA :: Input -> Int
+partA input = foldl (+) 0 largest
+  where
+    largest = map (read . last . sort . genPairs) input
+
+-- generate all possible pairs
+genPairs :: [Char] -> [[Char]]
+genPairs []     = []
+genPairs (x:xs) = pairs ++ genPairs xs
+  where
+    pairs = map (\(a:_) -> [x, a]) (filter (not . null) (tails xs))
 
 ------------ PART B ------------
-partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB :: Input -> Int
+partB input = foldl (+) 0 largest
+  where
+    largest = map (read . last . sort . genDozens) input
+
+--  generate all possible chunks of 12
+genDozens :: [Char] -> [[Char]]
+genDozens xs = filter (\x -> length x == 12) $ subsequences xs

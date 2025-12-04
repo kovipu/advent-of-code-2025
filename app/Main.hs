@@ -59,13 +59,17 @@ dayParser = (OneDay <$> day <*> input) <|> allDays
   where
     day =
       option auto $
-        long "day" <> short 'd' <> metavar "DAY"
+        long "day"
+          <> short 'd'
+          <> metavar "DAY"
           <> help "Present the solutions for one day."
 
     input =
       optional $
         strOption $
-          long "input" <> short 'i' <> metavar "FILE"
+          long "input"
+            <> short 'i'
+            <> metavar "FILE"
             <> help "The file to read the selected day's input from."
 
     allDays =
@@ -85,7 +89,8 @@ optionsParser = Options <$> dayParser <*> verbosityParser
     verbosityParser =
       C.option Quiet $
         ( flag' Verbose $
-            long "verbose" <> short 'v'
+            long "verbose"
+              <> short 'v'
               <> help
                 ( unwords
                     [ "Whether to print out extra info, such as the",
@@ -96,7 +101,8 @@ optionsParser = Options <$> dayParser <*> verbosityParser
                 )
         )
           <|> ( flag' Timings $
-                  long "timings" <> short 't'
+                  long "timings"
+                    <> short 't'
                     <> help
                       ( unwords
                           ["Whether to enable timing of the solutions."]

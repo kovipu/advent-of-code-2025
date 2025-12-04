@@ -40,7 +40,7 @@ type OutputB = Int
 partA :: Input -> OutputA
 partA = foldl fn 0
 
-fn acc (a, b) = foldl (+) acc $ filter isPasswordInvalid [a..b]
+fn acc (a, b) = foldl (+) acc $ filter isPasswordInvalid [a .. b]
 
 isPasswordInvalid n = start == end
   where
@@ -48,14 +48,13 @@ isPasswordInvalid n = start == end
     l = length s
     (start, end) = splitAt (l `div` 2) s
 
-
 ------------ PART B ------------
 partB :: Input -> OutputB
 partB = foldl fn' 0
 
-fn' acc (a, b) = foldl (+) acc $ filter isPasswordInvalid' [a..b]
+fn' acc (a, b) = foldl (+) acc $ filter isPasswordInvalid' [a .. b]
 
-isPasswordInvalid' n = any (\k -> isChunkMatch k s) [1..(l - 1)]
+isPasswordInvalid' n = any (\k -> isChunkMatch k s) [1 .. (l - 1)]
   where
     s = show n
     l = length s
@@ -68,6 +67,3 @@ isPasswordInvalid' n = any (\k -> isChunkMatch k s) [1..(l - 1)]
     -- generate chunks with lengths 1..(length p)
     equalChunks _ [] = []
     equalChunks k xs = take k xs : equalChunks k (drop k xs)
-
-
-

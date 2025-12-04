@@ -22,6 +22,7 @@ runDay = R.runDay inputParser partA partB
 
 ------------ PARSER ------------
 type Input = [[Char]]
+
 inputParser :: Parser Input
 inputParser = many1 digit `sepBy` endOfLine
 
@@ -33,10 +34,10 @@ partA input = foldl (+) 0 largest
 
 -- generate all possible pairs
 genPairs :: [Char] -> [[Char]]
-genPairs []     = []
-genPairs (x:xs) = pairs ++ genPairs xs
+genPairs [] = []
+genPairs (x : xs) = pairs ++ genPairs xs
   where
-    pairs = map (\(a:_) -> [x, a]) (filter (not . null) (tails xs))
+    pairs = map (\(a : _) -> [x, a]) (filter (not . null) (tails xs))
 
 ------------ PART B ------------
 partB :: Input -> Int
@@ -52,9 +53,9 @@ fn acc next = if b > acc then b else acc
     b = deleteFirstSmaller acc ++ [next]
 
 -- delete the first character that is smaller than its next one
-deleteFirstSmaller :: Ord a => [a] -> [a]
-deleteFirstSmaller []       = []
-deleteFirstSmaller [x]      = [] -- fall back to deleting the last one
-deleteFirstSmaller (x:y:xs)
-  | x < y     = y : xs
-  | otherwise = x : deleteFirstSmaller (y:xs)
+deleteFirstSmaller :: (Ord a) => [a] -> [a]
+deleteFirstSmaller [] = []
+deleteFirstSmaller [x] = [] -- fall back to deleting the last one
+deleteFirstSmaller (x : y : xs)
+  | x < y = y : xs
+  | otherwise = x : deleteFirstSmaller (y : xs)

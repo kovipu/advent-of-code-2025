@@ -34,7 +34,9 @@ parseLine = do
 
 ------------ TYPES ------------
 data Dir = L | R deriving (Eq, Show)
+
 type Inst = (Dir, Int)
+
 type Input = [Inst]
 
 type OutputA = Int
@@ -49,9 +51,10 @@ fn (pos, zeros) (dir, n) = (pos', zeros')
   where
     n' = n `mod` 100
     p = if dir == L then pos - n' else pos + n'
-    pos' | p < 0     = p + 100
-         | p >= 100  = p - 100
-         | otherwise = p
+    pos'
+      | p < 0 = p + 100
+      | p >= 100 = p - 100
+      | otherwise = p
     zeros' = if pos' == 0 then zeros + 1 else zeros
 
 ------------ PART B ------------
@@ -64,7 +67,8 @@ fn' (pos, zeros) (dir, n) = (pos', zeros' + loops)
     -- every full loop causes the dial to point at 0 once
     loops = n `div` 100
     p = if dir == L then pos - n' else pos + n'
-    (pos', zeros') | p == 0    = (p, zeros + 1)
-                   | p < 0     = (p + 100, if pos /= 0 then zeros + 1 else zeros)
-                   | p >= 100  = (p - 100, if pos /= 0 then zeros + 1 else zeros)
-                   | otherwise = (p, zeros)
+    (pos', zeros')
+      | p == 0 = (p, zeros + 1)
+      | p < 0 = (p + 100, if pos /= 0 then zeros + 1 else zeros)
+      | p >= 100 = (p - 100, if pos /= 0 then zeros + 1 else zeros)
+      | otherwise = (p, zeros)

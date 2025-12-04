@@ -51,6 +51,7 @@ library
       Days.Day25
       Program.Color
       Program.RunDay
+      Util.Lib
       Util.Pair
       Util.Parsers
       Util.Util

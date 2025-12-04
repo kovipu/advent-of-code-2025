@@ -13,6 +13,7 @@ import qualified Data.Text as T
 import Data.Vector (Vector)
 import qualified Data.Vector as Vec
 import qualified Util.Util as U
+import Util.Lib (enumerate, getNeighbors, replace2D, replace1D)
 
 import qualified Program.RunDay as R (runDay, Day)
 import Data.Attoparsec.Text (Parser, many1, char, sepBy, endOfLine)
@@ -47,18 +48,6 @@ partA input =
     0
     (enumerate input)
 
-enumerate = zip [0 ..]
-
-getNeighbors grid x y =
-  catMaybes $
-    map
-      ( \(x', y') ->
-          grid !? (y + y') >>= (!? (x + x'))
-      )
-      offsets
-  where
-    offsets = [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
-
 ------------ PART B ------------
 partB :: Input -> Int
 partB input = deletPapers input 0
@@ -84,13 +73,3 @@ deletPapers state n =
         (state, n)
         (enumerate state)
     removeRoll x y = replace2D x y '.'
-
-replace2D :: Int -> Int -> a -> [[a]] -> [[a]]
-replace2D x y newVal grid =
-  take y grid
-    ++ [replace1D x newVal (grid !! y)]
-    ++ drop (y + 1) grid
-
-replace1D :: Int -> a -> [a] -> [a]
-replace1D i val xs =
-  take i xs ++ [val] ++ drop (i + 1) xs

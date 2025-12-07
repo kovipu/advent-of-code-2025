@@ -1,6 +1,8 @@
 module Days.Day07 (runDay) where
 
 {- ORMOLU_DISABLE -}
+import Control.Applicative ((<|>))
+import Data.Functor            (($>))
 import Data.List
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
@@ -20,20 +22,38 @@ runDay :: R.Day
 runDay = R.runDay inputParser partA partB
 
 ------------ PARSER ------------
+type Input = [[Cell]]
+data Cell = Beam | Splitter | Empty deriving (Show, Eq)
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
-
------------- TYPES ------------
-type Input = Void
-
-type OutputA = Void
-
-type OutputB = Void
+inputParser = parseLine `sepBy` endOfLine
+  where
+    parseLine = many1 $ parseStart <|> parseEmpty <|> parseSplitter
+    parseStart = char 'S' $> Beam
+    parseEmpty = char '.' $> Empty
+    parseSplitter = char '^' $> Splitter
 
 ------------ PART A ------------
-partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA :: Input -> Int
+partA input = fst $ foldl fn (0, start) rest
+  where
+    (start:rest) = input
+    fn (splits, state) line = (s, state')
+      where
+        (state', _, s) = foldr fn' ([], False, splits) (zip state line)
+    fn' (prev, next) (acc, isSplitting, splits') =
+      -- ignore the case of two Splitters next to each other. Does not happen in the input data.
+      case (prev, next, isSplitting) of
+        -- isSplitting true -> create beam here
+        (Empty, _, True) -> (Beam : acc, False, splits')
+        -- issplitting false -> empty
+        (Empty, _, False) -> (Empty : acc, False, splits')
+        -- split
+        (Beam, Splitter, _) -> (Splitter : Beam : (drop 1 acc), True, splits' + 1)
+        -- continue the beam
+        (Beam, _, _) -> (Beam : acc, False, splits')
+        -- splitters can never have a beam right below them
+        (Splitter, _, _) -> (Empty : acc, False, splits')
 
 ------------ PART B ------------
-partB :: Input -> OutputB
+partB :: Input -> Void
 partB = error "Not implemented yet!"
